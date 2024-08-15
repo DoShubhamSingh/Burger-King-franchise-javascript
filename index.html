@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger King Order</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+     <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#order-form {
+    margin-bottom: 20px;
+}
+
+#order-summary {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+#order-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#order-list li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+#order-list li:last-child {
+    border-bottom: none;
+}
+
+#order-list img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+     </style>
+</head>
+<body>
+    <h1>Burger King Order</h1>
+    <form id="order-form">
+        <label for="food-select">Select Food:</label>
+        <select id="food-select">
+            <option value="whopper">Whopper</option>
+            <option value="impossible-whopper">Impossible Whopper</option>
+            <option value="chicken-sandwich">Chicken Sandwich</option>
+            <option value="fries">Fries</option>
+            <option value="drinks">Drinks</option>
+        </select>
+        <button id="add-to-order">Add to Order</button>
+    </form>
+    <div id="order-summary">
+        <h2>Your Order:</h2>
+        <ul id="order-list">
+            <!-- order items will be displayed here -->
+        </ul>
+    </div>
+    <script>
+
+const orderForm = document.getElementById('order-form');
+const orderList = document.getElementById('order-list');
+const foodSelect = document.getElementById('food-select');
+const addToOrderBtn = document.getElementById('add-to-order');
+
+let order = [];
+
+addToOrderBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const selectedFood = foodSelect.value;
+    const foodData = getFoodData(selectedFood);
+    addOrderItem(foodData);
+});
+
+function getFoodData(foodId) {
+    // Replace with your own data or API endpoint
+    const foodData = {
+        whopper: {
+            name: 'Whopper',
+            price: 5.99,
+            image: 'whopper.jpg'
+        },
+        'impossible-whopper': {
+            name: 'Impossible Whopper',
+            price: 6.99,
+            image: 'impossible-whopper.jpg'
+        },
+        'chicken-sandwich': {
+            name: 'Chicken Sandwich',
+            price: 4.99,
+            image: 'chicken-sandwich.jpg'
+        },
+        fries: {
+            name: 'Fries',
+            price: 2.99,
+            image: 'fries.jpg'
+        },
+        drinks: {
+            name: 'Drinks',
+            price: 1.99,
+            image: 'drinks.jpg'
+        }
+    };
+    return foodData[foodId];
+}
+
+function addOrderItem(foodData) {
+    const orderItem = document.createElement('li');
+    orderItem.innerHTML = `
+        <img src="${foodData.image}" alt="${foodData.name}">
+        <span>${foodData.name}</span>
+        <span>$${foodData.price}</span>
+    `;
+    orderList.appendChild(orderItem);
+    order.push(foodData);
+    updateOrderSummary();
+}
+
+function updateOrderSummary() {
+    const orderSummary = document.getElementById('order-summary');
+    const total = order.reduce((acc, current) => acc + current.price, 0);
+    orderSummary.innerHTML = `
+        <h2>Your Order:</h2>
+        <ul id="order-list">
+            ${order.map((item) => `
+                <li>
+                    <img src="${item.image}" alt="${item.name}">
+                    <span>${item.name}</span>
+                    <span>$${item.price}</span>
+                </li>
+            `).join('')}
+        </ul>
+        <p>Total: $${total.toFixed(2)}</p>
+    `;
+}
+    </script>
+</body>
+</html>
